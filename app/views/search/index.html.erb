@@ -1,0 +1,13 @@
+<div class="hero-unit">
+  <h1>Intentionist Search</h1>
+  <p>The new way to search intentionally</p>
+</div>
+<div class="span12">
+  <%= form_tag("/search", :method => "get", :class => "inline") do %>
+   <div class="input-append">
+    <%= select_tag(:intent, options_for_select([['I want to know...', 'know'], ['I want to eat...', 'eat']])) %>
+       <%= text_field_tag(:query, nil, :class => "input-xxlarge search-query") %>
+       <%= submit_tag("Search", :class => "btn btn-primary") %>
+    </div>
+  <% end %>
+</div>

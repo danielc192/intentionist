@@ -1,0 +1,22 @@
+class Node < ActiveRecord::Base
+  attr_accessible :input_type, :name, :output_type, :provider_id
+  belongs_to :provider
+
+  def input=(input)
+    ph = []
+    if input.class.to_s != "Array" then
+      ph << input
+    else
+      ph = input
+    end
+    provider.inputs = ph
+  end
+
+  def traversed?
+    @traversed ||= false
+  end
+
+  def traverse
+    @traversed = true
+  end
+end

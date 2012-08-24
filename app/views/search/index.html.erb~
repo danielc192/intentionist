@@ -1,0 +1,10 @@
+<div class="hero-unit">
+  <h1>Intentionist Search</h1>
+  <p>The new way to search intentionally</p>
+</div>
+<div class="span12">
+  <%= form_tag("/search", :method => "get") do %>
+    <%= text_field_tag(:query, nil, :class => "input-xxlarge") %><br>
+    <%= submit_tag("Search", :class => "btn btn-primary btn-large") %>
+  <% end %>
+</div>

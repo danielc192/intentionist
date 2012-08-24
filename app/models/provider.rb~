@@ -1,0 +1,59 @@
+class String
+  def is_number?
+    true if Float(self) rescue false
+  end
+end
+
+class Provider < ActiveRecord::Base
+  attr_accessible :apikey, :name, :url, :read_chain
+  has_many :nodes
+
+  def inputs=(input)
+    @inputs = input
+  end
+
+  def inputs
+    @inputs
+  end
+
+  def generate_url
+    url = self.url
+    url.scan(/%(\w+)%/).each do |type|
+      if url.scan(/%(\w+)%/) then
+        inputs.each do |input|
+          if input.class.to_s.downcase == type[0].downcase then
+            url.sub!("%#{type[0]}%", input)
+          end
+        end
+      end
+    end
+      unless self.apikey.empty? then
+        url += "&key=" + self.apikey
+      else
+        url
+      end
+  end
+
+  def execute
+    clnt = HTTPClient.new
+    result = JSON.parse(clnt.get_content(self.generate_url))
+    w = result
+    self.read_chain.split(",").each do |s|
+      if /\[(.*)\]/.match(s).nil? then
+        if s.is_number? then
+          w = w[s.to_i]
+        else
+          w = w[s.strip]
+        end
+      else
+        ret = []
+        s.split(";").each do |s|
+          s.gsub!(/[\[\]]/, "")
+          ret << w[s.strip]
+        end
+        puts ret.join(",")
+        return ret.join(",")
+      end
+   end
+  end
+end
